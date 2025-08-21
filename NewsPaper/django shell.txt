@@ -1,0 +1,59 @@
+Импорт моделей
+from django.contrib.auth.models import User
+from news.models import Author, Category, Post, Comment
+
+Создание пользователей
+u1 = User.objects.create_user(username='user1')
+u2 = User.objects.create_user(username='user2')
+
+Создание авторов
+a1 = Author.objects.create(user=u1)
+a2 = Author.objects.create(user=u2)
+
+Создание категорий
+cat_sport = Category.objects.create(name='Спорт')
+cat_politics = Category.objects.create(name='Политика')
+cat_education = Category.objects.create(name='Образование')
+cat_science = Category.objects.create(name='Наука')
+
+Создание постов (2 статьи и 1 новость)
+p1 = Post.objects.create(author=a1, post_type='AR', title='Первая статья', text='Текст первой статьи')
+p2 = Post.objects.create(author=a1, post_type='AR', title='Вторая статья', text='Текст второй статьи')
+p3 = Post.objects.create(author=a2, post_type='NW', title='Срочная новость', text='Текст новости')
+
+Присвоение категорий постам
+p1.categories.add(cat_sport, cat_politics)
+p2.categories.add(cat_education)
+p3.categories.add(cat_science)
+
+Создание комментариев
+c1 = Comment.objects.create(post=p1, user=u1, text='Комментарий к первой статье от user1')
+c2 = Comment.objects.create(post=p1, user=u2, text='Комментарий к первой статье от user2')
+c3 = Comment.objects.create(post=p2, user=u2, text='Комментарий ко второй статье от user2')
+c4 = Comment.objects.create(post=p3, user=u1, text='Комментарий к новости от user1')
+
+Лайки и дизлайки
+p1.like()
+p1.like()
+p2.dislike()
+c1.like()
+c2.dislike()
+c3.like()
+c4.like()
+c4.like()
+
+Обновление рейтингов авторов
+a1.update_rating()
+a2.update_rating()
+
+Лучший пользователь (по рейтингу)
+best_author = Author.objects.order_by('-rating').first()
+print(best_author.user.username, best_author.rating)
+
+Лучшая статья
+best_post = Post.objects.order_by('-rating').first()
+print(best_post.created_at, best_post.author.user.username, best_post.rating, best_post.title, best_post.preview())
+
+Все комментарии к лучшей статье
+for comment in best_post.comments.all():
+    print(comment.created_at, comment.user.username, comment.rating, comment.text)
