@@ -1,19 +1,24 @@
 {% extends 'flatpages/default.html' %}
-
 {% load custom_filters %}
+{% load custom_tags %}
 
 {% block title %}
 Все новости
 {% endblock title %}
 
 {% block content %}
-   <h1>Все новости</h1>
+   <h1>Все новости (страница {{ page_obj.number }})</h1>
    
+    <form action="" method="get">
+        {{ filterset.form.as_p }}
+        <input type="submit" value="Найти"/>
+    </form>
+
    <hr>
    
-   {% if posts %}
+   {% if page_obj %}
        <ul>
-           {% for post in posts %}
+           {% for post in page_obj %}  
            <li>
                <h3><a href="/news/{{ post.id }}">{{ post.title|censor }}</a></h3>
                <p><strong>Дата:</strong> {{ post.create_at|date:"d.m.Y" }}</p>
@@ -27,4 +32,23 @@
    {% else %}
        <h2>Новостей нет!</h2>
    {% endif %}
+
+<!-- Пагинация с сохранением фильтров -->
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?{% url_replace page=1 %}">« первая</a>
+                <a href="?{% url_replace page=page_obj.previous_page_number %}">предыдущая</a>
+            {% endif %}
+
+            <span class="current">
+                Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}.
+            </span>
+
+            {% if page_obj.has_next %}
+                <a href="?{% url_replace page=page_obj.next_page_number %}">следующая</a>
+                <a href="?{% url_replace page=page_obj.paginator.num_pages %}">последняя »</a>
+            {% endif %}
+        </span>
+   </div>
 {% endblock content %}

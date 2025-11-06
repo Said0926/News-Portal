@@ -1,22 +1,27 @@
-# from django.views.generic import ListView
-# from django.shortcuts import render
-# from .models import *
-
-# # Create your views here.
-# class NewsList(ListView):
-#     model = Post
-#     ordering = 'title'
-#     template_name = 'news.html'
-#     context_object_name = 'products'
-
-from django.shortcuts import render, get_object_or_404
+from django.views.generic import ListView, DetailView
 from .models import Post
+from .filters import PostFilter
 
-def news_list(request):
-    # Получаем все посты (и статьи, и новости)
-    posts = Post.objects.all().order_by('-create_at')
-    return render(request, 'news_list.html', {'posts': posts})
+class NewsList(ListView):
+    model = Post
+    ordering = '-create_at'
+    template_name = 'news_list.html'
+    context_object_name = 'posts'
+    paginate_by = 2
 
-def news_detail(request, pk):
-    post = get_object_or_404(Post, pk=pk)
-    return render(request, 'news_detail.html', {'post': post})
+    def get_queryset(self):
+        # Получаем обычный запрос
+        queryset = super().get_queryset()
+        # Используем наш класс фильтрации
+        self.filterset = PostFilter(self.request.GET, queryset)
+        return self.filterset.qs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['filterset'] = self.filterset
+        return context
+
+class NewsDetail(DetailView):
+    model = Post
+    template_name = 'news_detail.html'
+    context_object_name = 'post'

@@ -5,9 +5,9 @@
 #     path('', NewsList.as_view()),
 # ]
 from django.urls import path
-from . import views
+from .views import NewsDetail, NewsList
 
 urlpatterns = [
-    path('', views.news_list, name='news_list'),
-    path('<int:pk>/', views.news_detail, name='news_detail'),
+    path('news/', NewsList.as_view(), name='news_list'),
+    path('<int:pk>/', NewsDetail.as_view(), name='news_detail'),
 ]
