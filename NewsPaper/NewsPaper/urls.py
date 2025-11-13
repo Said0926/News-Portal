@@ -16,10 +16,18 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth import views as auth_views
+
+from news.views import NewsList
 
 urlpatterns = [
-    path('', include('news.urls')),
+    path('', NewsList.as_view(), name='home'),
     path('admin/', admin.site.urls),
     path('pages/', include('django.contrib.flatpages.urls')),
     path('news/', include('news.urls')),
+    # path('login/', LoginView.as_view(template_name='login.html'), name='login'),
+    # path('logout/', LogoutView.as_view(next_page='news_list'), name='logout'),
+    # path('signup/', your_signup_view, name='signup'),
+    
 ]

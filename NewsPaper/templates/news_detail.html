@@ -20,5 +20,15 @@
         <p>{{ post.text|censor }}</p>
     </div>
     
-    <a href="/news/">← Назад к списку новостей</a>
+    <!-- Кнопки редактирования и удаления -->
+<div class="mt-4">
+    {% if post.post_type == 'NW' %}
+        <a href="{% url 'news_edit' post.pk %}" class="btn btn-primary">Редактировать новость</a>
+        <a href="{% url 'news_delete' post.pk %}" class="btn btn-danger">Удалить новость</a>
+    {% else %}
+        <a href="{% url 'article_edit' post.pk %}" class="btn btn-primary">Редактировать статью</a>
+        <a href="{% url 'article_delete' post.pk %}" class="btn btn-danger">Удалить статью</a>
+    {% endif %}
+    <a href="{% url 'news_list' %}" class="btn btn-secondary">Назад к списку</a>
+</div>
 {% endblock content %}
