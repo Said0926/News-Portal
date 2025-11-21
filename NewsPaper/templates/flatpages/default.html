@@ -33,22 +33,49 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="/contacts/">Контакты</a>
-                        <!-- </li>
+                        </li>
+                        
+                        {% if user.is_authenticated %}
+                        <!-- Выпадающее меню для авторизованных пользователей -->
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" 
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Создать
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <a class="dropdown-item" href="{% url 'news_create' %}">Новость</a>
                                 <a class="dropdown-item" href="{% url 'article_create' %}">Статью</a>
                             </div>
-                        </li> -->
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'news_create' %}">Создать новость</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'article_create' %}">Создать статью</a>
-                        </li>
+                        {% endif %}
+                    </ul>
+                    
+                    <!-- Правая часть навбара -->
+                    <ul class="navbar-nav ml-auto">
+                        {% if user.is_authenticated %}
+                            <!-- <li class="nav-item">
+                                <span class="navbar-text">Привет, {{ user.username }}!</span>
+                            </li> -->
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'accounts:profile' %}">Профиль</a>
+                            </li>
+                            <li class="nav-item">
+                                <!-- Форма для выхода -->
+                                <form method="post" action="{% url 'accounts:logout' %}" class="d-inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-link nav-link" style="border: none; background: none; cursor: pointer; padding: 8px 0;">
+                                        Выйти
+                                    </button>
+                                </form>
+                            </li>
+                        {% else %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'accounts:login' %}">Войти</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'accounts:register' %}">Регистрация</a>
+                            </li>
+                        {% endif %}
                     </ul>
                 </div>
             </div>

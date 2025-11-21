@@ -26,6 +26,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('pages/', include('django.contrib.flatpages.urls')),
     path('news/', include('news.urls')),
+    path('accounts/', include('accounts.urls')),
     # path('login/', LoginView.as_view(template_name='login.html'), name='login'),
     # path('logout/', LogoutView.as_view(next_page='news_list'), name='logout'),
     # path('signup/', your_signup_view, name='signup'),

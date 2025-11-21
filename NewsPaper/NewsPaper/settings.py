@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-4b8$q&c8p=3z-9@hn7=^0i+67&k%6*66$72#$%m*olh_=a0@5w
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1']
 
 
 # Application definition
@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.flatpages',
     'news',
-    'django_filters'
+    'django_filters',
+    'accounts'
 ]
 
 SITE_ID = 1
@@ -131,3 +132,7 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 STATICFILES_DIRS = [BASE_DIR / 'static']
+
+LOGIN_URL = 'accounts/login/'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
