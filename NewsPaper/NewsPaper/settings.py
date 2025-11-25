@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     'allauth',                   
     'allauth.account',           
     'allauth.socialaccount',
-    'accounts'
+    'accounts', 
+    'allauth.socialaccount.providers.yandex',
 ]
 
 SITE_ID = 1
@@ -151,6 +152,17 @@ ACCOUNT_LOGIN_METHODS = {'email', 'username'}
 ACCOUNT_LOGOUT_ON_GET = True  # разрешает выход по GET-запросу
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+
+SOCIALACCOUNT_PROVIDERS = {
+    'yandex': {
+        'APP': {
+            'client_id': '******',
+            'secret': '******',
+            'key': '*******'
+        }
+    }
+}
+
 
 ACCOUNT_FORMS = {
     'signup': 'news.forms.BasicSignupForm',
