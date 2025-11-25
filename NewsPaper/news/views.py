@@ -1,9 +1,14 @@
 from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, DetailView
+from django.views.generic import TemplateView
+from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Post, Author
 from .forms import NewsForm, ArticleForm
 from .filters import PostFilter
+from django.contrib.auth.models import Group
+from django.shortcuts import redirect
+from django.contrib import messages
 
 class NewsList(ListView):
     model = Post
@@ -30,7 +35,7 @@ class NewsDetail(DetailView):
     context_object_name = 'post'
 
 # СОЗДАНИЕ
-# @login_required
+@login_required
 def create_news(request):
     if not hasattr(request.user, 'author'):
         Author.objects.create(user=request.user)
@@ -49,7 +54,7 @@ def create_news(request):
     
     return render(request, 'news_create.html', {'form': form})
 
-# @login_required
+@login_required
 def create_article(request):
     if not hasattr(request.user, 'author'):
         Author.objects.create(user=request.user)
@@ -70,7 +75,7 @@ def create_article(request):
 
 
 # РЕДАКТИРОВАНИЕ
-# @login_required
+@login_required
 def edit_news(request, pk):
     news = get_object_or_404(Post, pk=pk, post_type='NW')
     
@@ -88,7 +93,7 @@ def edit_news(request, pk):
     
     return render(request, 'news_edit.html', {'form': form, 'news': news})
 
-# @login_required
+@login_required
 def edit_article(request, pk):
     article = get_object_or_404(Post, pk=pk, post_type='AR')
     
@@ -107,7 +112,7 @@ def edit_article(request, pk):
     return render(request, 'article_edit.html', {'form': form, 'article': article})
 
 # УДАЛЕНИЕ
-# @login_required
+@login_required
 def delete_news(request, pk):
     news = get_object_or_404(Post, pk=pk, post_type='NW')
     
@@ -121,7 +126,7 @@ def delete_news(request, pk):
     
     return render(request, 'news_delete.html', {'news': news})
 
-# @login_required
+@login_required
 def delete_article(request, pk):
     article = get_object_or_404(Post, pk=pk, post_type='AR')
     
@@ -134,3 +139,19 @@ def delete_article(request, pk):
         return redirect('news_list')
     
     return render(request, 'article_delete.html', {'article': article})
+
+
+# стать автором 
+@login_required
+def become_author(request):
+    """Добавляет пользователя в группу premium"""
+    user = request.user
+    premium_group = Group.objects.get(name='premium')
+    
+    if not user.groups.filter(name='premium').exists():
+        user.groups.add(premium_group)
+        messages.success(request, 'Поздравляем! Теперь вы автор и можете создавать публикации!')
+    else:
+        messages.info(request, 'Вы уже являетесь автором!')
+    
+    return redirect('news_list')

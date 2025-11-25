@@ -42,10 +42,18 @@ INSTALLED_APPS = [
     'django.contrib.flatpages',
     'news',
     'django_filters',
+    'allauth',                   
+    'allauth.account',           
+    'allauth.socialaccount',
     'accounts'
 ]
 
 SITE_ID = 1
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
 
 
 MIDDLEWARE = [
@@ -57,6 +65,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
+    
 ]
 
 ROOT_URLCONF = 'NewsPaper.urls'
@@ -68,7 +78,8 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
-                'django.template.context_processors.request',
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',  # обязательно для allauth
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
@@ -133,6 +144,16 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 STATICFILES_DIRS = [BASE_DIR / 'static']
 
-LOGIN_URL = 'accounts/login/'
+# Настройки allauth
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
+ACCOUNT_EMAIL_VERIFICATION = 'optional'  # optional, mandatory, none
+ACCOUNT_LOGIN_METHODS = {'email', 'username'}
+ACCOUNT_LOGOUT_ON_GET = True  # разрешает выход по GET-запросу
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+
+ACCOUNT_FORMS = {
+    'signup': 'news.forms.BasicSignupForm',
+}
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

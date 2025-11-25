@@ -53,27 +53,28 @@
                     <!-- Правая часть навбара -->
                     <ul class="navbar-nav ml-auto">
                         {% if user.is_authenticated %}
-                            <!-- <li class="nav-item">
-                                <span class="navbar-text">Привет, {{ user.username }}!</span>
-                            </li> -->
                             <li class="nav-item">
-                                <a class="nav-link" href="{% url 'accounts:profile' %}">Профиль</a>
+                                <span class="navbar-text">{{ user.username }}</span>
                             </li>
+                            
+                            <!-- Кнопка "Стать автором" для обычных пользователей -->
+                            {% if not user.groups.filter.name == 'premium' %}
                             <li class="nav-item">
-                                <!-- Форма для выхода -->
-                                <form method="post" action="{% url 'accounts:logout' %}" class="d-inline">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn btn-link nav-link" style="border: none; background: none; cursor: pointer; padding: 8px 0;">
-                                        Выйти
-                                    </button>
-                                </form>
+                                <a class="nav-link btn btn-success btn-sm text-white" href="{% url 'become_author' %}" style="margin: 0 10px;">
+                                    Стать автором
+                                </a>
+                            </li>
+                            {% endif %}
+                            
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'account_logout' %}">Выйти</a>
                             </li>
                         {% else %}
                             <li class="nav-item">
-                                <a class="nav-link" href="{% url 'accounts:login' %}">Войти</a>
+                                <a class="nav-link" href="{% url 'account_login' %}">Войти</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{% url 'accounts:register' %}">Регистрация</a>
+                                <a class="nav-link" href="{% url 'account_signup' %}">Регистрация</a>
                             </li>
                         {% endif %}
                     </ul>
