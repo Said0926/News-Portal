@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Новая публикация на NewsPortal</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .header {
+            background: #2c3e50;
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .content {
+            padding: 30px;
+        }
+        .greeting {
+            font-size: 16px;
+            margin-bottom: 20px;
+            color: #555;
+        }
+        .post-title {
+            color: #2c3e50;
+            font-size: 22px;
+            margin: 20px 0;
+            border-left: 4px solid #3498db;
+            padding-left: 15px;
+        }
+        .post-preview {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+            border: 1px solid #e9ecef;
+        }
+        .post-preview p {
+            margin: 0;
+            font-style: italic;
+            color: #666;
+        }
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+        .category-info {
+            background: #e8f4fd;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            font-size: 14px;
+        }
+        .footer {
+            background: #ecf0f1;
+            padding: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #7f8c8d;
+        }
+        .footer a {
+            color: #7f8c8d;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📰 NewsPortal</h1>
+            <p>Новая публикация в вашей подписке</p>
+        </div>
+        
+        <div class="content">
+            <div class="greeting">
+                <strong>Здравствуй, {{ user.username }}. Новая статья в твоём любимом разделе!</strong>
+            </div>
+            
+            <div class="post-title">
+                {{ post.title }}
+            </div>
+            
+            <div class="post-preview">
+                <p>{{ post.text|truncatechars:50 }}</p>
+            </div>
+            
+            <div style="text-align: center;">
+                <a href="http://127.0.0.1:8000/news/{{ post.id }}/" class="btn">
+                    📖 Читать полностью
+                </a>
+            </div>
+            
+            <div class="category-info">
+                <strong>Категория:</strong> {{ category.name }}<br>
+                <strong>Автор:</strong> {{ post.author.user.username }}<br>
+                <strong>Дата публикации:</strong> {{ post.create_at|date:"d.m.Y H:i" }}
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Вы получили это письмо, потому что подписаны на категорию "{{ category.name }}"</p>
+            <p>
+                <a href="http://127.0.0.1:8000/news/subscriptions/">Управление подписками</a> | 
+                <a href="http://127.0.0.1:8000/news/category/{{ category.id }}/unsubscribe/">Отписаться</a>
+            </p>
+            <p>&copy; 2025 NewsPortal. Все права защищены.</p>
+        </div>
+    </div>
+</body>
+</html>

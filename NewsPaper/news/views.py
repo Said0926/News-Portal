@@ -3,12 +3,13 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, DetailView
 from django.views.generic import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .models import Post, Author
+from .models import Post, Author, Category, Subscription
 from .forms import NewsForm, ArticleForm
 from .filters import PostFilter
 from django.contrib.auth.models import Group
 from django.shortcuts import redirect
 from django.contrib import messages
+from django.core.mail import send_mail
 
 class NewsList(ListView):
     model = Post
@@ -27,6 +28,14 @@ class NewsList(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['filterset'] = self.filterset
+        
+        category_id = self.request.GET.get('categories')
+        if category_id:
+            try:
+                context['current_category'] = Category.objects.get(id=category_id)
+            except Category.DoesNotExist:
+                context['current_category'] = None
+        
         return context
 
 class NewsDetail(DetailView):
@@ -155,3 +164,44 @@ def become_author(request):
         messages.info(request, 'Вы уже являетесь автором!')
     
     return redirect('news_list')
+
+
+@login_required
+def subscribe_to_category(request, category_id):
+    """Подписка пользователя на категорию"""
+    category = get_object_or_404(Category, id=category_id)
+    user = request.user
+    
+    # Проверяем, не подписан ли уже пользователь
+    if not Subscription.objects.filter(user=user, category=category).exists():
+        Subscription.objects.create(user=user, category=category)
+        messages.success(request, f'Вы подписались на категорию "{category.name}"')
+    else:
+        messages.info(request, f'Вы уже подписаны на категорию "{category.name}"')
+    
+    # Перенаправляем обратно на ту же страницу
+    return redirect(request.META.get('HTTP_REFERER', 'news_list'))
+
+@login_required
+def unsubscribe_from_category(request, category_id):
+    """Отписка пользователя от категории"""
+    category = get_object_or_404(Category, id=category_id)
+    user = request.user
+    
+    subscription = Subscription.objects.filter(user=user, category=category)
+    if subscription.exists():
+        subscription.delete()
+        messages.success(request, f'Вы отписались от категории "{category.name}"')
+    else:
+        messages.info(request, f'Вы не подписаны на категорию "{category.name}"')
+    
+    # Перенаправляем обратно на ту же страницу
+    return redirect(request.META.get('HTTP_REFERER', 'news_list'))
+
+@login_required
+def my_subscriptions(request):
+    """Страница с подписками пользователя"""
+    user_subscriptions = Subscription.objects.filter(user=request.user)
+    return render(request, 'subscriptions.html', {
+        'subscriptions': user_subscriptions
+    })

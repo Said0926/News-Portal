@@ -10,6 +10,7 @@
         <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
         <!-- Core theme CSS (includes Bootstrap)-->
          {% load static %}
+         {% load custom_tags %}
         <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
     </head>
     <body>
@@ -35,8 +36,8 @@
                             <a class="nav-link" href="/contacts/">Контакты</a>
                         </li>
                         
-                        {% if user.is_authenticated %}
-                        <!-- Выпадающее меню для авторизованных пользователей -->
+                        <!-- Меню "Создать" только для авторов (premium) -->
+                        {% if user.is_authenticated and user|has_group:'premium' %}
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" 
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -58,13 +59,18 @@
                             </li>
                             
                             <!-- Кнопка "Стать автором" для обычных пользователей -->
-                            {% if not user.groups.filter.name == 'premium' %}
+                            {% if not user|has_group:'premium' %}
                             <li class="nav-item">
                                 <a class="nav-link btn btn-success btn-sm text-white" href="{% url 'become_author' %}" style="margin: 0 10px;">
                                     Стать автором
                                 </a>
                             </li>
                             {% endif %}
+                            
+                            <!-- Ссылка на подписки -->
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'my_subscriptions' %}">Мои подписки</a>
+                            </li>
                             
                             <li class="nav-item">
                                 <a class="nav-link" href="{% url 'account_logout' %}">Выйти</a>

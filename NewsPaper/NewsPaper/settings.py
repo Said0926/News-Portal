@@ -168,4 +168,16 @@ ACCOUNT_FORMS = {
     'signup': 'news.forms.BasicSignupForm',
 }
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# настройки для отправки писем через яндекс smtp
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_PORT = 465
+EMAIL_USE_SSL = True
+EMAIL_HOST_USER = 'saidovsaid23@yandex.ru'  #  Яндекс почта
+EMAIL_HOST_PASSWORD = '*'  #  пароль приложения
+DEFAULT_FROM_EMAIL = 'saidovsaid23@yandex.ru'
+SERVER_EMAIL = 'saidovsaid23@yandex.ru'
+
+EMAIL_SUBJECT_PREFIX = '[NewsPortal]'
