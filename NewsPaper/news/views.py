@@ -55,8 +55,11 @@ def create_news(request):
             news = form.save(commit=False)
             news.author = request.user.author
             news.post_type = 'NW'
+            
             news.save()
+            
             form.save_m2m()
+            
             return redirect('news_list')
     else:
         form = NewsForm()
@@ -74,14 +77,16 @@ def create_article(request):
             article = form.save(commit=False)
             article.author = request.user.author
             article.post_type = 'AR'
+            
             article.save()
+            
             form.save_m2m()
+            
             return redirect('news_list')
     else:
         form = ArticleForm()
     
     return render(request, 'article_create.html', {'form': form})
-
 
 # РЕДАКТИРОВАНИЕ
 @login_required

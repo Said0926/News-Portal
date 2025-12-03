@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'django.contrib.flatpages',
-    'news',
+    'news.apps.NewsConfig',
     'django_filters',
     'allauth',                   
     'allauth.account',           
@@ -156,9 +156,9 @@ LOGOUT_REDIRECT_URL = '/'
 SOCIALACCOUNT_PROVIDERS = {
     'yandex': {
         'APP': {
-            'client_id': '******',
-            'secret': '******',
-            'key': '*******'
+            'client_id': 'fcd79de97754a96dc7a7808345ac9614',
+            'secret': 'wccfzsbtarvetmew',
+            'key': ''
         }
     }
 }
@@ -176,8 +176,13 @@ EMAIL_HOST = 'smtp.yandex.ru'
 EMAIL_PORT = 465
 EMAIL_USE_SSL = True
 EMAIL_HOST_USER = 'saidovsaid23@yandex.ru'  #  Яндекс почта
-EMAIL_HOST_PASSWORD = '*'  #  пароль приложения
+EMAIL_HOST_PASSWORD = 'wccfzsbtarvetmew'  #  пароль приложения
 DEFAULT_FROM_EMAIL = 'saidovsaid23@yandex.ru'
 SERVER_EMAIL = 'saidovsaid23@yandex.ru'
 
 EMAIL_SUBJECT_PREFIX = '[NewsPortal]'
+
+
+MANAGERS = [
+    ('Said', 'saidovsaid23@yandex.ru'),
+]

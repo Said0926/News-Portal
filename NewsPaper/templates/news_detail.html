@@ -1,6 +1,7 @@
 {% extends 'flatpages/default.html' %}
 
 {% load custom_filters %}
+{% load custom_tags %}
 
 {% block title %}
 {{ post.title }}
@@ -82,7 +83,7 @@
 
     <!-- Кнопки редактирования и удаления -->
     <div class="mt-4">
-        {% if user.is_authenticated and user.groups.filter.name == 'premium' and post.author.user == user %}
+        {% if user.is_authenticated and user|has_group:'premium' and post.author.user == user %}
             {% if post.post_type == 'NW' %}
                 <a href="{% url 'news_edit' post.pk %}" class="btn btn-primary">Редактировать новость</a>
                 <a href="{% url 'news_delete' post.pk %}" class="btn btn-danger">Удалить новость</a>
