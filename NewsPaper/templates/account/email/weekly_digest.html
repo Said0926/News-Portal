@@ -1,0 +1,19 @@
+<h2>Новые статьи в категории {{ category.name }}</h2>
+<p>Здравствуйте, {{ user.username }}!</p>
+
+<p>За неделю появились новые статьи:</p>
+
+<ul>
+{% for post in posts %}
+    <li>
+        <strong>{{ post.title }}</strong><br>
+        Автор: {{ post.author.user.username }}<br>
+        Дата: {{ post.create_at|date:"d.m.Y" }}<br>
+        <a href="http://127.0.0.1:8000/news/{{ post.id }}/">Читать →</a>
+    </li>
+{% endfor %}
+</ul>
+
+<p>Всего статей: {{ posts|length }}</p>
+<hr>
+<small>Отписаться: http://127.0.0.1:8000/news/subscriptions/</small>

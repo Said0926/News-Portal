@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 import os
+from decouple import config, Csv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -47,6 +48,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'accounts', 
     'allauth.socialaccount.providers.yandex',
+    'django_apscheduler',
+    
 ]
 
 SITE_ID = 1
@@ -153,11 +156,18 @@ ACCOUNT_LOGOUT_ON_GET = True  # разрешает выход по GET-запр�
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
+# Базовые настройки
+SECRET_KEY = config('SECRET_KEY')
+DEBUG = config('DEBUG', default=False, cast=bool)
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1', cast=Csv())
+
+
+# Яндекс OAuth
 SOCIALACCOUNT_PROVIDERS = {
     'yandex': {
         'APP': {
-            'client_id': 'fcd79de97754a96dc7a7808345ac9614',
-            'secret': 'wccfzsbtarvetmew',
+            'client_id': config('YANDEX_CLIENT_ID'), 
+            'secret': config('YANDEX_SECRET'),        
             'key': ''
         }
     }
@@ -175,14 +185,21 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.yandex.ru'
 EMAIL_PORT = 465
 EMAIL_USE_SSL = True
-EMAIL_HOST_USER = 'saidovsaid23@yandex.ru'  #  Яндекс почта
-EMAIL_HOST_PASSWORD = 'wccfzsbtarvetmew'  #  пароль приложения
-DEFAULT_FROM_EMAIL = 'saidovsaid23@yandex.ru'
-SERVER_EMAIL = 'saidovsaid23@yandex.ru'
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')          
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')  
+DEFAULT_FROM_EMAIL = config('EMAIL_HOST_USER')
+SERVER_EMAIL = config('EMAIL_HOST_USER')
 
 EMAIL_SUBJECT_PREFIX = '[NewsPortal]'
 
 
 MANAGERS = [
-    ('Said', 'saidovsaid23@yandex.ru'),
+    ('Said Saidov', config('EMAIL_HOST_USER')),
 ]
+
+# формат даты, которую будет воспринимать наш задачник (вспоминаем модуль по фильтрам) 
+APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
+
+# если задача не выполняется за 25 секунд, то она автоматически снимается, можете поставить время побольше, но как правило, это сильно бьёт по производительности сервера
+APSCHEDULER_RUN_NOW_TIMEOUT = 25  # Seconds
+
